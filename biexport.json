@@ -1,0 +1,932 @@
+{
+  "id": "com.biexcellence.openbi.sap.sac.export",
+  "version": "2022.12.213",
+  "name": "biExport",
+  "description": "biExport 4 SAP SAC to PDF/PPT/DOC/XLS/CSV",
+  "newInstancePrefix": "biExport",
+  "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAABegAAAXoBMrnI/AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJGSURBVDiNlZNPSNNxGMY/399+++OWuKaJQ0MtBItBhYwEEexQhNglECLq0EU9mZ06Ti8dIujQITqEBy+B1wjrkFEQBWqUaC3NBUtLs7ma+/v783YQl3MW9MD38uV5PvA+Ly8iwt/e8Jvj/uHJLv1fHiUi7NTIfMhF1hoUuA7UAIgtQ1o4eieC2OxSCWBkPrSPnDUjQstuI6hH6uH7c5FIKUQrhsdDLnLmp73DANItPa1ju3+LADlk3xZRtXuHi7o4Mn3kTNkIg4st7sBPPVdmt7Wn8c/dE3a+qlfTkh8DwVdL3sofffXKd7CvbcoA0AGqk84WUaVlGob7QezDpbDfp92s8gsOpcKpRJjkerzf0Tx7ARj7M4JXW98ZLuR9d+fnLp91u7TDfp/QUKM4VOek2qfjMCvvff1S4yjt4OjcmhJiAAoVn5o534mFXwMcCjy64HFChbsCpYR0siFy690xXxEQQey8wzyJKHPmbdt9KIQsFAVT2MzCSkIRWy0Q9DZxwBdkv9ffNPHC4ynZwo0TC98XYgPtqZRnwJY0hpkiYxgkMibLGxmWN35RsDUEjcbqZnTcjcUSt7Xy7fQVHF2WLY/HDSvemc276iwLMpoBKs3i2hIBXxXR1XnyhmOpDCDQhjjrhZ5eCzNhW6+fmXY0q6uNAKRbp+MrVbZkcpYEr04OTSbLAEAMaN8qUw/YdHQVpIPC1oY3ESMqyjma9mRGtwMlADOr9esemQU5hVK1ILYgawrmNOF5zgo8eXmtIbszU3aN/6vfbVAouCAyeN4AAAAASUVORK5CYII=",
+  "vendor": "bi excellence software GmbH",
+  "supportsMobile": true,
+  "eula": "",
+  "license": "",
+  "imports": [
+    "input-controls"
+  ],
+  "webcomponents": [
+    {
+      "kind": "main",
+      "tag": "com-biexcellence-openbi-sap-sac-export",
+      "url": "https://cdn.biexcellence.com/biexport/sac/2022.12.213.15421/biexport.js",
+      "integrity": "sha256-XQnhfD9mn2q20RQWIySmH4riKBf8sUXmTLUTAtBgUGE="
+    },
+    {
+      "kind": "styling",
+      "tag": "com-biexcellence-openbi-sap-sac-export-aps",
+      "url": "https://cdn.biexcellence.com/biexport/sac/2022.12.213.15421/biexport_aps.js",
+      "integrity": "sha256-8/fumoBsrAHJTMGdBR2qBGExGDUcMDYGC0GKWrW4VKY="
+    }
+  ],
+  "properties": {
+    "serverURL": {
+      "type": "string",
+      "description": "The URL to the open bi Repository installation that handles the export. If you use an installation on your local machine, change this property to http://localhost:9091, otherwise to the address and port of your installation.",
+      "default": "https://designstudioexport.biexcellence.com"
+    },
+    "licenseKey": {
+      "type": "string",
+      "description": "The license key to be used for sending the notification (for usage tracking, usage limits, special smtp server configuration)",
+      "default": ""
+    },
+    "filename": {
+      "type": "string",
+      "description": "The file name of the export document. The extension will be determined automatically. You can use placeholders (manual section 3.9).",
+      "default": "SACExport_%EXECUTION_DATE_SHORT%_%EXECUTION_TIME_SHORT%"
+    },
+    "exportLanguage": {
+      "type": "string",
+      "description": "By default, the export determines the language for the export document from the web client. The export language is used to render the correct format for date and time placeholders (manual section 3.10) and to interpret number formats correctly for Excel export (manual secion 3.11).  You can set this property explicitly to overrule the automatic determination.",
+      "default": ""
+    },
+    "screenWidth": {
+      "type": "integer",
+      "description": "By default the export uses the screen width of the user to create an export document that resembles the screen display. If you experience extensive white spaces or to small font sizes, you can set this property to a static value, e.g. 1000 pixels.",
+      "default": 0
+    },
+    "screenHeight": {
+      "type": "integer",
+      "description": "If you make extensive use of relative height definitions, exports to PowerPoint, Word or Excel might show to small font sizes. In this case, you can set this property to a static value, e.g. 800 pixels. You might have to combine with a Static Screen Width.",
+      "default": 0
+    },
+    "parseCss": {
+      "type": "boolean",
+      "description": "If the Export does not show icons or images, you can set this property to true. This activates the collection of all images of the SAC application and sends them to the Export service.",
+      "default": false
+    },
+    "biAnalyticsDocument": {
+      "type": "boolean",
+      "description": "If set to true, the export automatically creates native Office objects when possible - charts, tables, dropdowns, texts etc.",
+      "default": false
+    },
+    "pdfTemplate": {
+      "type": "string",
+      "description": "As an alternative to the HTML Template property, you can also specify a DOC, DOCX, PPT or PPTX template which will be used as a fully formatted template for your PDF export",
+      "default": ""
+    },
+    "pptSeparate": {
+      "type": "boolean",
+      "description": "This property only takes affect if you are not using an Export Template. If set to `false` the application is rendered onto one slide. If you set this property to `true`, each component is rendered to a separate slide.",
+      "default": true
+    },
+    "pptTemplate": {
+      "type": "string",
+      "description": "By specifying a template for the PowerPoint Export (in PPT or PPTX formats) you can generate complete presentations in your corporate design and with standard text",
+      "default": ""
+    },
+    "docTemplate": {
+      "type": "string",
+      "description": "By specifying a template for the Word Export (in DOC or DOCX formats) you can generate complete Word documents in your corporate design and with standard text",
+      "default": ""
+    },
+    "xlsTemplate": {
+      "type": "string",
+      "description": "By specifying a template for the Excel Export (in XLS or XLSX formats) you can generate complete Word documents in your corporate design and with standard text",
+      "default": ""
+    },
+    "publishMode": {
+      "type": "string",
+      "description": "Controls the way the Export document is delivered: ONLINE, MAIL, FILE etc.",
+      "default": ""
+    },
+    "publishSync": {
+      "type": "boolean",
+      "description": "If set to true, the export process runs synchronuously even if the file shall not be returned to the user.",
+      "default": false
+    },
+    "mailFrom": {
+      "type": "string",
+      "description": "The sender of the mail (Publish Mode must be set to MAIL)",
+      "default": ""
+    },
+    "mailTo": {
+      "type": "string",
+      "description": "The recipients of the mail (Publish Mode must be set to MAIL)",
+      "default": ""
+    },
+    "mailSubject": {
+      "type": "string",
+      "description": "The subject of the mail (Publish Mode must be set to MAIL)",
+      "default": ""
+    },
+    "mailBody": {
+      "type": "string",
+      "description": "The mail body (Publish Mode must be set to MAIL)",
+      "default": ""
+    },
+    "showIcons": {
+      "type": "boolean",
+      "description": "Show icons in the export buttons",
+      "default": true
+    },
+    "showTexts": {
+      "type": "boolean",
+      "description": "Show texts in the export buttons",
+      "default": true
+    },
+    "showViewSelector": {
+      "type": "boolean",
+      "description": "Show view selector before exporting",
+      "default": false
+    },
+    "showComponentSelector": {
+      "type": "boolean",
+      "description": "Show component selector before exporting",
+      "default": false
+    },
+    "enablePdf": {
+      "type": "boolean",
+      "description": "Show PDF option",
+      "default": true
+    },
+    "enablePpt": {
+      "type": "boolean",
+      "description": "Show PowerPoint option",
+      "default": true
+    },
+    "enableDoc": {
+      "type": "boolean",
+      "description": "Show Word option",
+      "default": true
+    },
+    "enableXls": {
+      "type": "boolean",
+      "description": "Show Excel option",
+      "default": true
+    },
+    "enableCsv": {
+      "type": "boolean",
+      "description": "Show CSV Export option",
+      "default": false
+    },
+    "enablePng": {
+      "type": "boolean",
+      "description": "Show Images Export option",
+      "default": true
+    },
+    "pdfHeader": {
+      "type": "string",
+      "description": "The PDF Header",
+      "default": "<table width=1000px style=\"font - family: Arial; \"><tr><td width=850px>SAC Export</td><td width=150px><img src=\"\" width=150px></table>"
+    },
+    "pdfFooter": {
+      "type": "string",
+      "description": "The PDF Footer",
+      "default": "<table width=1000px style=\"font - family: Arial;\"><tr><td>%PAGE% of %PAGES%</td></tr></table>"
+    },
+    "pdfOrient": {
+      "type": "string",
+      "description": "The PDF Orientation",
+      "default": "L"
+    },
+    "tablesSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for Meta Data / Result Set Retrieve",
+      "default": ""
+    },
+    "pdfSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for PDF export",
+      "default": ""
+    },
+    "pptSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for PowerPoint export",
+      "default": ""
+    },
+    "docSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for Word export",
+      "default": ""
+    },
+    "xlsSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for Excel export",
+      "default": ""
+    },
+    "pngSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for Images export",
+      "default": ""
+    },
+    "csvSelectedWidgets": {
+      "type": "string",
+      "description": "Selected Widgets for CSV export",
+      "default": ""
+    },
+    "oauth": {
+      "type": "string",
+      "description": "For internal use",
+      "default": ""
+    }
+  },
+  "methods": {
+    "getServerUrl": {
+      "returnType": "string",
+      "description": "Get the Server URL",
+      "parameters": []
+    },
+    "setServerUrl": {
+      "description": "Set the Server URL",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Server URL"
+        }
+      ]
+    },
+    "getLicenseKey": {
+      "returnType": "string",
+      "description": "Get the License Key",
+      "parameters": []
+    },
+    "setLicenseKey": {
+      "description": "Set the License Key",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new License Key"
+        }
+      ]
+    },
+    "getFilename": {
+      "returnType": "string",
+      "description": "Get the filename",
+      "parameters": []
+    },
+    "setFilename": {
+      "description": "Set the filename",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new filename"
+        }
+      ]
+    },
+    "getExportLanguage": {
+      "returnType": "string",
+      "description": "Get the Export Language",
+      "parameters": []
+    },
+    "setExportLanguage": {
+      "description": "Set the Export Language",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Export Language"
+        }
+      ]
+    },
+    "getStaticWidth": {
+      "returnType": "integer",
+      "description": "Get the Static Width",
+      "parameters": []
+    },
+    "setStaticWidth": {
+      "description": "Set the Static Width",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "integer",
+          "description": "The new Static Width"
+        }
+      ]
+    },
+    "getStaticHeight": {
+      "returnType": "integer",
+      "description": "Get the Static Height",
+      "parameters": []
+    },
+    "setStaticHeight": {
+      "description": "Set the Static Height",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "integer",
+          "description": "The new Screen Height"
+        }
+      ]
+    },
+    "getParseCss": {
+      "returnType": "boolean",
+      "description": "Get whether Parse CSS is enabled or not",
+      "parameters": []
+    },
+    "setParseCss": {
+      "description": "Set whether Parse CSS is enabled or not",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new Parse CSS"
+        }
+      ]
+    },
+    "getBiAnalyticsDocument": {
+      "returnType": "boolean",
+      "description": "Get whether biAnalytics Document is enabled or not",
+      "parameters": []
+    },
+    "setBiAnalyticsDocument": {
+      "description": "Set whether biAnaltics Document is enabled or not",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new biAnalytics Document"
+        }
+      ]
+    },
+    "getPdfTemplate": {
+      "returnType": "string",
+      "description": "Get the PDF Template",
+      "parameters": []
+    },
+    "setPdfTemplate": {
+      "description": "Set the PDF Template",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new PDF Template"
+        }
+      ]
+    },
+    "getPptSeparateSlides": {
+      "returnType": "boolean",
+      "description": "Gets the Property 'One Component by Slide' for PowerPoint Export",
+      "parameters": []
+    },
+    "setPptSeparateSlides": {
+      "description": "Sets the Property 'One Component by Slide' for PowerPoint Export.",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new biAnalytics Document"
+        }
+      ]
+    },
+    "getPptTemplate": {
+      "returnType": "string",
+      "description": "Get the PPT Template",
+      "parameters": []
+    },
+    "setPptTemplate": {
+      "description": "Set the PPT Template",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new PPT Template"
+        }
+      ]
+    },
+    "getDocTemplate": {
+      "returnType": "string",
+      "description": "Get the DOC Template",
+      "parameters": []
+    },
+    "setDocTemplate": {
+      "description": "Set the DOC Template",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new DOC Template"
+        }
+      ]
+    },
+    "getXlsTemplate": {
+      "returnType": "string",
+      "description": "Get the XLS Template",
+      "parameters": []
+    },
+    "setXlsTemplate": {
+      "description": "Set the XLS Template",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new XLS Template"
+        }
+      ]
+    },
+    "getExportTemplate": {
+      "description": "Add an Export Template",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\""
+        }
+      ]
+    },
+    "setExportTemplate": {
+      "description": "Set the Export Template",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Export Template"
+        }
+      ]
+    },
+    "getPublishMode": {
+      "returnType": "string",
+      "description": "Get the Publish Mode",
+      "parameters": []
+    },
+    "setPublishMode": {
+      "description": "Set the Publish Mode",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Publish Mode"
+        }
+      ]
+    },
+    "getPublishSync": {
+      "returnType": "boolean",
+      "description": "Get the Publish Sync",
+      "parameters": []
+    },
+    "setPublishSync": {
+      "description": "Set the Publish Sync",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new Publish Sync"
+        }
+      ]
+    },
+    "getMailFrom": {
+      "returnType": "string",
+      "description": "Get the Mail From",
+      "parameters": []
+    },
+    "setMailFrom": {
+      "description": "Set the Mail From",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Mail From"
+        }
+      ]
+    },
+    "getMailTo": {
+      "returnType": "string",
+      "description": "Get the Mail To",
+      "parameters": []
+    },
+    "setMailTo": {
+      "description": "Set the Mail To",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Mail To"
+        }
+      ]
+    },
+    "getMailSubject": {
+      "returnType": "string",
+      "description": "Get the Mail Subject",
+      "parameters": []
+    },
+    "setMailSubject": {
+      "description": "Set the Mail Subject",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Mail Subject"
+        }
+      ]
+    },
+    "getMailBody": {
+      "returnType": "string",
+      "description": "Get the Mail Body",
+      "parameters": []
+    },
+    "setMailBody": {
+      "description": "Set the Mail Body",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The new Mail Body"
+        }
+      ]
+    },
+    "getButtonIconVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the button icon",
+      "parameters": []
+    },
+    "setButtonIconVisible": {
+      "description": "Set the visibility of the button text",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getButtonTextVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the button text",
+      "parameters": []
+    },
+    "setButtonTextVisible": {
+      "description": "Set the visibility of the button text",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getViewSelectorVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the view selector",
+      "parameters": []
+    },
+    "setViewSelectorVisible": {
+      "description": "Set the visibility of the view selector",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getWidgetSelectorVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the widget selector",
+      "parameters": []
+    },
+    "setWidgetSelectorVisible": {
+      "description": "Set the visibility of the widget selector",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getPdfButtonVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the PDF export button",
+      "parameters": []
+    },
+    "setPdfButtonVisible": {
+      "description": "Set the visibility of the PDF export button",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getPptButtonVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the PowerPoint export button",
+      "parameters": []
+    },
+    "setPptButtonVisible": {
+      "description": "Set the visibility of the PowerPoint export button",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getDocButtonVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the Word export button",
+      "parameters": []
+    },
+    "setDocButtonVisible": {
+      "description": "Set the visibility of the Word export button",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getXlsButtonVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the Excel export button",
+      "parameters": []
+    },
+    "setXlsButtonVisible": {
+      "description": "Set the visibility of the Excel export button",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getPngButtonVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the Images export button",
+      "parameters": []
+    },
+    "setPngButtonVisible": {
+      "description": "Set the visibility of the Images export button",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "getCsvButtonVisible": {
+      "returnType": "boolean",
+      "description": "Get the visibility of the CSV export button",
+      "parameters": []
+    },
+    "setCsvButtonVisible": {
+      "description": "Set the visibility of the CSV export button",
+      "parameters": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The new visibility"
+        }
+      ]
+    },
+    "addSelectedWidget": {
+      "description": "Add a widget to be exported.",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\", \"PNG\""
+        },
+        {
+          "name": "widget",
+          "type": "string",
+          "description": "The name of the Widget."
+        },
+        {
+          "name": "isSelected",
+          "type": "boolean",
+          "description": "Set to true to select, set to false to exclude"
+        }
+      ]
+    },
+    "clearSelectedWidgets": {
+      "description": "Clears all applications to be exported during background execution.",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\", \"PNG\""
+        }
+      ]
+    },
+    "addCustomText": {
+      "description": "Add a Custom Text to replace a placeholder in the export.",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the placeholder."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The text to be displayed for the placeholder."
+        }
+      ]
+    },
+    "clearCustomTexts": {
+      "description": "Clears all Custom Texts."
+    },
+    "addExportApplication": {
+      "description": "Add an application to be exported during background execution.",
+      "parameters": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "The id of the application."
+        }
+      ]
+    },
+    "clearExportApplications": {
+      "description": "Clears all applications to be exported during background execution."
+    },
+    "addURLParameter": {
+      "description": "Add an URL parameter and value which is used during background execution.",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the URL parameter."
+        },
+        {
+          "name": "values",
+          "type": "string[]",
+          "description": "The values of the URL parameter."
+        },
+        {
+          "name": "iterative",
+          "type": "boolean",
+          "description": "Whether the URL parameter values should be iterated over."
+        },
+        {
+          "name": "applicationIds",
+          "type": "string[]",
+          "description": "The applications for which the URL parameter will be used, if empty the URL parameter is used for all applications."
+        }
+      ]
+    },
+    "clearURLParameters": {
+      "description": "Clears all URLs parameters which are used during background execution."
+    },
+    "addPdfSection": {
+      "description": "Add a PDF Section as an Export Template.",
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the PDF Section. May be empty."
+        },
+        {
+          "name": "header",
+          "type": "string",
+          "description": "The page header for the PDF Section."
+        },
+        {
+          "name": "footer",
+          "type": "string",
+          "description": "The page footer for the PDF Section."
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "The page content for the PDF Section."
+        },
+        {
+          "name": "orientation",
+          "type": "string",
+          "description": "(P)ortrait or (L)andscape."
+        },
+        {
+          "name": "iterative",
+          "type": "boolean",
+          "description": "Whether the URL parameter values should be iterated over."
+        }
+      ]
+    },
+    "clearPdfSections": {
+      "description": "Clears all PDF Sections."
+    },
+    "addBriefingBookDefinition": {
+      "description": "Add a Briefing Book Definition which is used during background execution.",
+      "parameters": [
+        {
+          "name": "parameters",
+          "type": "string[]",
+          "description": "The url parameters to be passed to the application in JSON notation {\"name\": \"myUrlParameter\", \"value\": \"itsValue\"}"
+        },
+        {
+          "name": "index",
+          "type": "integer",
+          "description": "Ordinal of the execution."
+        },
+        {
+          "name": "filename",
+          "type": "string",
+          "description": "Optional:The filename to which the results of the application shall be added."
+        },
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Optional: The Export Template which shall be used for this particular execution."
+        },
+        {
+          "name": "customTexts",
+          "type": "string[]",
+          "description": "The custom texts to be replaced in the Export Template for this particular execution {\"name\": \"myPlaceholder\", \"value\": \"textToReplace\"}"
+        },
+        {
+          "name": "selectedWidgets",
+          "type": "string[]",
+          "description": "Optional: The widgets to be added into the export document."
+        },
+        {
+          "name": "applicationIds",
+          "type": "string[]",
+          "description": "Optional: The applications for which the URL parameter will be used."
+        }
+      ]
+    },
+    "clearBriefingBookDefinitions": {
+      "description": "Clears all Briefing Book Definitions which are used during background execution."
+    },
+    "addExportTemplateSection": {
+      "description": "Add an Export Template Section dynamically for the given format.",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\""
+        },
+        {
+          "name": "template",
+          "type": "string",
+          "description": "Name of the Export Template that shall be used for this section"
+        },
+        {
+          "name": "pageBreakAfter",
+          "type": "boolean",
+          "description": "If set to false, the Word document section will not be ended with a page break."
+        },
+        {
+          "name": "placeholderRedefinitions",
+          "type": "string[]",
+          "description": "List of specific placeholders that replace the generic placholders of the Export Template {\"name\": \"genericPlaceholderName\", \"value\": \"specificPlaceholderName\"}"
+        },
+        {
+          "name": "placeholderValues",
+          "type": "string[]",
+          "description": "List of values that replace the placholders of the Export Template {\"name\": \"placeholderName\", \"value\": \"myText\"}"
+        }
+      ]
+    },
+    "clearExportTemplateSections": {
+      "description": "Clears the Export Template Sections for the given format.",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\""
+        }
+      ]
+    },
+    "getServiceMessage": {
+      "returnType": "string",
+      "description": "Gets the Service Message",
+      "parameters": []
+    },
+    "doExport": {
+      "description": "Triggers the export process.",
+      "parameters": [
+        {
+          "name": "format",
+          "type": "string",
+          "description": "The export format: \"PDF\", \"PPT\", \"DOC\", \"XLS\""
+        }
+      ]
+    }
+  },
+  "events": {
+    "onStart": {
+      "description": "Specify the SAC Script that shall be triggered when the Export process is started. If you set the publishing property Parse CSS to true, all image resources are collected in this phase."
+    },
+    "onSend": {
+      "description": "Specify the SAC Script that shall be triggered when the Export process sends the content to the Export service."
+    },
+    "onReturn": {
+      "description": "Specify the SAC Script that shall be triggered when the Export process receives the generated document from the Export service."
+    },
+    "onError": {
+      "description": "Specify the SAC Script that shall be triggered when an error is reported by the Export process."
+    }
+  }
+}
