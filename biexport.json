@@ -16,14 +16,16 @@
     {
       "kind": "main",
       "tag": "com-biexcellence-openbi-sap-sac-export",
-      "url": "https://cdn.biexcellence.com/biexport/sac/2022.12.213.15421/biexport.js",
-      "integrity": "sha256-XQnhfD9mn2q20RQWIySmH4riKBf8sUXmTLUTAtBgUGE="
+      "url": "https://akansha5707.github.io/CustomWidget_Excel_SAC/biexport.js,
+      "integrity": ""
+      "ignoreIntegrity": true
     },
     {
       "kind": "styling",
       "tag": "com-biexcellence-openbi-sap-sac-export-aps",
-      "url": "https://cdn.biexcellence.com/biexport/sac/2022.12.213.15421/biexport_aps.js",
-      "integrity": "sha256-8/fumoBsrAHJTMGdBR2qBGExGDUcMDYGC0GKWrW4VKY="
+      "url": "https://akansha5707.github.io/CustomWidget_Excel_SAC/biexport.js",
+      "integrity": ""
+      "ignoreIntegrity": true
     }
   ],
   "properties": {
